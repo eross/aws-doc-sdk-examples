@@ -55,20 +55,9 @@ public class AssumeRole {
 
     public static void main(String[] args) {
 
-        final String usage = "\n" +
-            "Usage:\n" +
-            "    <roleArn> <roleSessionName> \n\n" +
-            "Where:\n" +
-            "    roleArn - The Amazon Resource Name (ARN) of the role to assume (for example, rn:aws:iam::000008047983:role/s3role). \n"+
-            "    roleSessionName - An identifier for the assumed role session (for example, mysession). \n";
 
-        if (args.length != 2) {
-            System.out.println(usage);
-            System.exit(1);
-        }
-
-        String roleArn = args[0];
-        String roleSessionName = args[1];
+        String roleArn = "arn:aws:iam::558046099615:role/ericrole";
+        String roleSessionName = "erictest";
         Region region = Region.US_EAST_1;
         StsClient stsClient = StsClient.builder()
             .region(region)
@@ -93,7 +82,9 @@ public class AssumeRole {
 
            // Display the time when the temp creds expire.
            Instant exTime = myCreds.expiration();
-           String tokenInfo = myCreds.sessionToken();
+           String sessionToken = myCreds.sessionToken();
+           String accessKeyId = myCreds.accessKeyId();
+           String secretAccessKey = myCreds.secretAccessKey();
 
            // Convert the Instant to readable date.
            DateTimeFormatter formatter =
@@ -102,7 +93,9 @@ public class AssumeRole {
                            .withZone( ZoneId.systemDefault() );
 
            formatter.format( exTime );
-           System.out.println("The token "+tokenInfo + "  expires on " + exTime );
+           System.out.println("SESSIONTOKEN: "+sessionToken + "  expires on " + exTime );
+           System.out.println("ACCESSKEYID: "+accessKeyId);
+           System.out.println("SECRETACCESSKEY: "+secretAccessKey);
 
        } catch (StsException e) {
            System.err.println(e.getMessage());
